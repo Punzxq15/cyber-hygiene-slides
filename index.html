@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cyber Hygiene Fundamentals – ทีม 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#070b14;--tx:#eef2ff;--mut:#94a3b8;--cy:#22d3ee;--gr:#34d399;--rd:#ff4d4d;--am:#fbbf24;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font-family:'Prompt','Noto Sans Thai',sans-serif;overflow:hidden}
+button{font:inherit}
+.stage{position:relative;height:100%;overflow:hidden;touch-action:pan-y}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;animation:drift 14s ease-in-out infinite alternate}
+.o1{width:380px;height:380px;background:#6366f1;top:-100px;left:-80px}
+.o2{width:340px;height:340px;background:#0891b2;bottom:-100px;right:-60px;animation-delay:-6s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.2)}}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%)}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 18px 88px;text-align:center;opacity:0;visibility:hidden;transform:translateX(70px) scale(.97);filter:blur(10px);transition:opacity .6s,transform .7s cubic-bezier(.2,.8,.2,1),filter .6s,visibility 0s .7s}
+.slide.past{transform:translateX(-70px) scale(.97)}
+.slide.active{opacity:1;visibility:visible;transform:none;filter:none;transition-delay:0s}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.active .rv{opacity:1;transform:none;transition-delay:calc(var(--d,0)*1ms + 250ms)}
+.h1{font-size:clamp(24px,4.6vw,58px);line-height:1.4;font-weight:700;margin:0 0 .3em;max-width:1000px}
+.h2{font-size:clamp(20px,3.2vw,38px);font-weight:700;margin:0 0 14px}
+.sub{color:var(--mut);font-size:clamp(14px,1.8vw,20px);margin:6px 0}
+.btn{border:0;border-radius:999px;padding:14px 28px;background:linear-gradient(135deg,var(--cy),#6366f1);color:#02101a;font-weight:600;font-size:clamp(15px,2vw,18px);cursor:pointer;box-shadow:0 8px 30px rgba(34,211,238,.35);transition:transform .2s;animation:pulseb 2s infinite}
+.btn:active{transform:scale(.94)}
+.btn.ghost{background:rgba(255,255,255,.1);color:var(--tx);box-shadow:none;animation:none;border:1px solid rgba(255,255,255,.2)}
+@keyframes pulseb{50%{box-shadow:0 8px 44px rgba(34,211,238,.7)}}
+/* slide1 */
+.s1{background:#000}
+.bad{color:var(--rd);animation:glitch 3s infinite}
+.go{color:var(--am)}
+@keyframes glitch{0%,90%,100%{text-shadow:none;transform:none}92%{text-shadow:3px 0 #0ff,-3px 0 #f0f;transform:translateX(2px)}95%{text-shadow:-3px 0 #0ff,3px 0 #f0f;transform:translateX(-2px)}}
+.bell{font-size:44px;display:inline-block;margin-bottom:6px;animation:ring 2.4s infinite;transform-origin:50% 0}
+@keyframes ring{0%,60%,100%{transform:rotate(0)}65%{transform:rotate(18deg)}70%{transform:rotate(-16deg)}75%{transform:rotate(12deg)}80%{transform:rotate(-8deg)}}
+.hint{font-size:13px;color:#64748b;margin-top:18px}
+.toast{position:fixed;z-index:50;top:calc(env(safe-area-inset-top,0px) + 14px);left:50%;transform:translate(-50%,-180%);width:min(92vw,430px);background:#fff;color:#202124;border-radius:16px;padding:12px 14px;display:flex;gap:12px;text-align:left;box-shadow:0 18px 50px rgba(0,0,0,.6);transition:transform .6s cubic-bezier(.2,1.3,.4,1);cursor:pointer;font-family:'Noto Sans Thai',sans-serif}
+.toast.on{transform:translate(-50%,0)}
+.toast .av{flex:none;width:40px;height:40px;border-radius:50%;background:#0b2a6b;color:#fff;display:grid;place-items:center;font-weight:700}
+.toast b{display:block;font-size:14px}.toast span{font-size:13px;color:#555}.toast i{font-style:normal;color:#d00;font-weight:700}
+/* email */
+.ev{position:relative;overflow:hidden;width:min(100%,calc((100dvh - 250px)*1.2));margin:14px auto 0;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.6);background:#fff}
+.email{position:absolute;left:0;top:0;width:760px;transform-origin:0 0;background:#fff;color:#202124;font:400 15px/1.6 'Noto Sans Thai',sans-serif;text-align:left;transition:transform .95s cubic-bezier(.4,.1,.2,1)}
+.eb{display:flex;gap:26px;padding:14px 18px;border-bottom:1px solid #e5e5e5;font-size:22px;color:#555}
+.esub{padding:18px 18px 8px;font-size:23px;line-height:1.35}.esub i{font:500 12px 'Noto Sans Thai';background:#e8eaed;border-radius:5px;padding:3px 10px;vertical-align:middle;margin-left:6px}
+.efrom{display:flex;gap:14px;padding:6px 18px 18px;align-items:flex-start}
+.av2{flex:none;width:48px;height:48px;border-radius:50%;background:#0b2a6b;color:#fff;display:grid;place-items:center;font-weight:700;font-size:18px}
+.efrom small{font-size:13px;color:#5f6368}.efrom .to{font-size:13px;color:#5f6368}.efrom .dt{margin-left:auto;font-size:13px;color:#5f6368;white-space:nowrap}
+.ebody{padding:10px 18px 24px 64px}.ebody p{margin:0 0 14px}
+.cta{display:inline-block;background:#0b57d0;color:#fff;font-weight:700;border-radius:999px;padding:14px 32px;margin:8px 0 18px;cursor:pointer;font-size:16px}
+.ft{border-top:1px solid #e5e5e5;margin-top:18px;padding-top:10px;font-size:12.5px;color:#777}
+.hl{position:relative;display:inline-block}
+.ring{position:absolute;inset:-7px -12px;border:4px solid var(--rd);border-radius:999px;opacity:0;transform:scale(1.7);transition:opacity .5s,transform .6s cubic-bezier(.2,1.4,.4,1);pointer-events:none}
+.ev[data-r~="1"] .r1 .ring,.ev[data-r~="2"] .r2 .ring{opacity:1;transform:none;animation:rp 1.3s infinite}
+@keyframes rp{0%{box-shadow:0 0 0 0 rgba(255,77,77,.7)}100%{box-shadow:0 0 0 18px rgba(255,77,77,0)}}
+.scan::after{content:"";position:absolute;left:0;right:0;height:70px;background:linear-gradient(transparent,rgba(34,211,238,.35),transparent);animation:scan 3s linear infinite;pointer-events:none}
+@keyframes scan{from{top:-70px}to{top:100%}}
+.cap{font-size:clamp(17px,2.6vw,30px);font-weight:600}
+.warn{position:fixed;z-index:40;left:50%;top:50%;transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;background:#7f1d1d;border:2px solid var(--rd);border-radius:18px;padding:18px 22px;max-width:86vw;text-align:center;font-weight:600;transition:.35s cubic-bezier(.2,1.5,.4,1)}
+.warn.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+/* slide3 */
+.s3 .wrap{display:flex;gap:22px;width:min(1180px,100%);align-items:center;justify-content:center}
+.s3 .ev{flex:1.5;margin:0;width:auto;max-width:calc((100dvh - 190px)*1.2)}
+.panel{flex:1;min-width:0;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:20px}
+.pc{display:none;animation:pop .5s}.pc.on{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}}
+.pc h3{margin:0 0 10px;font-size:clamp(17px,2.2vw,24px)}.pc p{margin:6px 0;color:#cbd5e1;font-size:clamp(14px,1.6vw,17px)}
+.dom{display:flex;align-items:center;gap:10px;margin:8px 0;font:600 clamp(15px,2vw,20px) monospace;padding:10px 12px;border-radius:12px}
+.dom.f{background:rgba(255,77,77,.15);border:1px solid var(--rd)}.dom.f b{color:var(--rd);text-decoration:underline wavy}
+.dom.t{background:rgba(52,211,153,.12);border:1px solid var(--gr)}.dom.t b{color:var(--gr)}.dom em{font:500 13px 'Prompt';font-style:normal;color:#cbd5e1;margin-left:auto}
+.chips{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.chip{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:var(--tx);border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer}
+.chip.on{background:var(--rd);border-color:var(--rd)}
+/* slide4 */
+.mis{position:relative;padding:28px 34px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);margin:10px 0 26px;transition:opacity .6s}
+.tag{display:inline-block;font-size:13px;letter-spacing:.1em;color:var(--am);margin-bottom:6px}
+.mis .h1{margin:0}
+.mis svg{position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px);pointer-events:none}
+.mis path{fill:none;stroke:var(--rd);stroke-width:12;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke;transition:stroke-dashoffset .6s ease .1s;filter:drop-shadow(0 0 10px rgba(255,77,77,.8))}
+.mis path+path{transition-delay:.55s}
+[data-step="1"] .mis path{stroke-dashoffset:0}
+[data-step="1"] .mis{opacity:.55}
+.fix{opacity:0;transform:scale(.85) translateY(20px);transition:.8s cubic-bezier(.2,1.4,.4,1) 1.1s;font-size:clamp(24px,4.4vw,52px);font-weight:700;line-height:1.35;background:linear-gradient(90deg,var(--gr),var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px rgba(52,211,153,.4))}
+[data-step="1"] .fix{opacity:1;transform:none}
+.s4 .btn{position:absolute;bottom:92px;transition:opacity .3s}[data-step="1"] .btn{opacity:0;pointer-events:none}
+.ring{inset:-6px -10px;border-width:3px;transform:scale(1.5);box-shadow:0 0 12px rgba(255,77,77,.65),inset 0 0 8px rgba(255,77,77,.25)}
+.r2 .ring{inset:-9px -14px}
+.ring::after{content:"";position:absolute;inset:-9px;border:2px solid var(--rd);border-radius:inherit;opacity:0}
+.ev[data-r~="1"] .r1 .ring::after,.ev[data-r~="2"] .r2 .ring::after{animation:rq 1.6s ease-out infinite}
+@keyframes rp{0%,100%{box-shadow:0 0 8px rgba(255,77,77,.6),inset 0 0 6px rgba(255,77,77,.2)}50%{box-shadow:0 0 22px rgba(255,77,77,.9),inset 0 0 10px rgba(255,77,77,.35)}}
+@keyframes rq{0%{opacity:.8;inset:-4px}100%{opacity:0;inset:-22px}}
+.r2{margin:10px 0 20px}.cta{margin:0!important}
+.mis{transition:opacity .6s,transform .7s}.mis svg{display:none}
+.st{background:linear-gradient(var(--rd),var(--rd)) 0 56%/0 6px no-repeat;transition:background-size .7s ease .5s}
+.s4[data-step="1"] .st,.s4[data-step="2"] .st{background-size:100% 6px}
+.x{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px;pointer-events:none;opacity:0;transform:scale(3) rotate(-20deg)}
+.x i{position:absolute;left:50%;top:-8%;width:16px;height:116%;margin-left:-8px;border-radius:9px;background:var(--rd);box-shadow:0 0 24px var(--rd);transform:rotate(45deg)}
+.x i+i{transform:rotate(-45deg)}
+.s4[data-step="1"] .x{animation:slam .55s cubic-bezier(.3,1.6,.5,1) forwards}
+.s4[data-step="2"] .x{animation:none;opacity:.92;transform:none}
+.s4[data-step="1"] .mis{animation:shk .5s .45s;opacity:1}
+.s4[data-step="2"] .mis{opacity:.6;transform:scale(.72);margin:-12px 0 -8px}
+@keyframes slam{to{opacity:.92;transform:none}}
+@keyframes shk{20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+.stamp{position:absolute;right:-6px;top:-18px;background:var(--rd);color:#fff;font-weight:700;padding:2px 14px;border-radius:8px;font-size:18px;transform:rotate(8deg) scale(0);transition:transform .4s cubic-bezier(.3,1.8,.5,1) .7s}
+.s4[data-step="1"] .stamp,.s4[data-step="2"] .stamp{transform:rotate(8deg) scale(1)}
+.net,.nt{display:none}
+.s4[data-step="2"] .net{display:grid}.s4[data-step="2"] .nt{display:block;animation:pop .6s .2s both}
+.net{position:relative;grid-template-columns:repeat(8,1fr);gap:8px;margin:14px 0 8px;padding:12px;border-radius:16px;background:rgba(255,255,255,.04);width:min(560px,100%);overflow:hidden}
+.net span{font-size:clamp(20px,4vw,30px);border:2px solid transparent;border-radius:12px;padding:2px}
+.netov{position:absolute;inset:0;z-index:2;background:repeating-linear-gradient(45deg,transparent 0 13px,rgba(255,77,77,.55) 13px 15px),repeating-linear-gradient(-45deg,transparent 0 13px,rgba(255,77,77,.55) 13px 15px);transform:translateY(-110%);pointer-events:none}
+.s4[data-step="2"] .netov{animation:cast 1.2s .3s cubic-bezier(.5,0,.3,1) forwards}
+@keyframes cast{to{transform:none}}
+.s4[data-step="2"] .net span{animation:caught .5s calc(var(--i)*55ms + 1000ms) forwards}
+@keyframes caught{to{border-color:var(--rd);background:rgba(255,77,77,.22);transform:scale(1.12);box-shadow:0 0 12px rgba(255,77,77,.6)}}
+.nt{font-size:clamp(14px,2vw,20px);color:#cbd5e1;margin-bottom:14px}.nt b{color:var(--am)}
+.s4 .fix{font-size:clamp(22px,4vw,46px);opacity:0;transform:scale(.85) translateY(20px);transition:.8s cubic-bezier(.2,1.4,.4,1) 2.2s}
+.s4[data-step="2"] .fix{opacity:1;transform:none}
+.s4[data-step="1"] .btn{opacity:1;pointer-events:auto}.s4[data-step="2"] .btn{opacity:0;pointer-events:none}
+.tli small{display:block;color:#94a3b8;font-size:12.5px;margin-top:2px}
+.bad{display:inline-block}.bad.shk{animation:shk .5s}
+.card.bump{animation:bmp .45s}@keyframes bmp{40%{transform:scale(1.08) rotate(-1.5deg)}}
+.rpl{position:fixed;z-index:60;width:12px;height:12px;margin:-6px;border-radius:50%;border:2px solid var(--cy);pointer-events:none;animation:rpl .7s ease-out forwards}@keyframes rpl{to{transform:scale(7);opacity:0}}
+.s7{overflow:hidden}.cf{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;pointer-events:none;animation:fall linear forwards}@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.shield{cursor:pointer}
+/* slide5 */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;width:min(1120px,100%);margin-top:10px}
+.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);border-radius:22px;padding:24px 16px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0,var(--c),transparent 70%);opacity:.18}
+.card .n{position:absolute;top:10px;right:14px;font-size:34px;font-weight:700;opacity:.15}
+.ic{position:relative;width:84px;height:84px;margin:0 auto 12px;border-radius:24px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid var(--c)}
+.ic svg{width:46px;height:46px;stroke:var(--c);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i1 svg{animation:sway 2.6s ease-in-out infinite}.i2 svg{animation:pls 2s infinite}.i3 svg{animation:pls 2.4s infinite .3s}.i4 svg{animation:flt 2.4s ease-in-out infinite}
+@keyframes sway{50%{transform:rotate(-14deg) translateX(-3px)}}@keyframes pls{50%{transform:scale(1.15)}}@keyframes flt{50%{transform:translateY(-6px)}}
+.card h3{margin:0 0 6px;font-size:clamp(17px,1.9vw,21px);position:relative}.card p{margin:0;color:#cbd5e1;font-size:clamp(13px,1.5vw,15px);position:relative}
+/* slide6 */
+.tl{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;width:min(1050px,100%);align-items:center;margin-top:8px}
+.col{display:grid;gap:14px}
+.tli{text-align:left;background:rgba(255,255,255,.06);border-left:4px solid var(--c);border-radius:14px;padding:12px 14px}
+.tli b{display:block;color:var(--c);font-size:13px}.tli span{font-size:clamp(14px,1.7vw,17px);font-weight:500}
+.qrb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:24px;padding:16px;max-width:290px}
+.qr{position:relative;background:#fff;border-radius:14px;padding:10px;width:clamp(150px,22vw,220px);margin:0 auto;overflow:hidden}.qr svg{display:block;width:100%}
+.qr::after{content:"";position:absolute;left:0;right:0;height:4px;background:var(--cy);box-shadow:0 0 14px var(--cy);animation:qs 2.2s ease-in-out infinite alternate}
+@keyframes qs{from{top:6%}to{top:94%}}
+.qrb p{margin:12px 0 0;font-weight:600;font-size:clamp(14px,1.7vw,17px)}
+/* slide7 */
+.shield{position:relative;width:120px;height:120px;display:grid;place-items:center;margin-bottom:16px}
+.shield svg{width:70px;stroke:var(--cy);fill:rgba(34,211,238,.12);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;position:relative}
+.shield::before,.shield::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--cy);animation:rp2 2.4s infinite}.shield::after{animation-delay:1.2s}
+@keyframes rp2{from{transform:scale(.5);opacity:.9}to{transform:scale(1.5);opacity:0}}
+.grad{background:linear-gradient(90deg,var(--cy),var(--gr),var(--am),var(--gr),var(--cy));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gs 5s linear infinite}
+@keyframes gs{to{background-position:200%}}
+.qa{margin-top:24px;padding:12px 30px;border-radius:999px;border:2px solid var(--cy);font-size:clamp(18px,2.6vw,28px);font-weight:600}
+.term{position:fixed;z-index:30;top:calc(env(safe-area-inset-top,0px) + 12px);left:14px;font:12px/1 monospace;color:var(--cy);opacity:.75;text-shadow:0 0 8px var(--cy)}.term::after{content:"\25AE";animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:20;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 3px);opacity:.4;animation:fl 6s infinite}@keyframes fl{0%,94%,100%{opacity:.4}95%{opacity:.8}97%{opacity:.25}}
+.gl .slide.active{animation:gj .42s steps(1)}
+@keyframes gj{0%{transform:translate(-8px,2px) skewX(4deg);filter:hue-rotate(70deg)}20%{clip-path:inset(10% 0 55% 0);transform:translateX(10px)}45%{clip-path:inset(55% 0 12% 0);transform:translateX(-9px)}70%{clip-path:inset(30% 0 30% 0);transform:translateX(5px) skewX(-3deg)}100%{clip-path:inset(0);transform:none}}
+.gl .h1:not(.grad),.gl .h2,.gl .cap{text-shadow:3px 0 rgba(255,0,200,.75),-3px 0 rgba(0,255,255,.75)}
+.gb{position:absolute;left:0;right:0;z-index:25;pointer-events:none;mix-blend-mode:screen;animation:gbo .3s steps(3) forwards}@keyframes gbo{0%{transform:translateX(-50px);opacity:1}100%{transform:translateX(50px);opacity:0}}
+.qr img{display:block;width:100%;border-radius:6px}.sbtn{margin-top:12px;padding:10px 26px;font-size:16px}
+.ov{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:max(3.5vh,14px) max(3vw,14px);visibility:hidden;opacity:0;transition:opacity .4s,visibility 0s .4s}.ov.on{visibility:visible;opacity:1;transition-delay:0s}
+.ovbg{position:absolute;inset:0;background:rgba(3,6,14,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.ovp{position:relative;display:flex;gap:18px;width:min(1280px,100%);height:100%;transform:scale(.92) translateY(30px);transition:transform .6s cubic-bezier(.2,1.2,.3,1)}.ov.on .ovp{transform:none}
+.ovq{flex:0 0 290px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:22px;border-radius:28px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.ovq .qw{position:relative;width:100%;background:#fff;border-radius:18px;padding:12px;box-shadow:0 0 40px rgba(34,211,238,.45);animation:qg 2.4s ease-in-out infinite}@keyframes qg{50%{box-shadow:0 0 70px rgba(34,211,238,.85)}}
+.qw img{display:block;width:100%;border-radius:8px}
+.qw::before,.qw::after{content:"";position:absolute;width:26px;height:26px;border:4px solid var(--cy);animation:cb 2s ease-in-out infinite}.qw::before{left:-8px;top:-8px;border-right:0;border-bottom:0;border-radius:12px 0 0 0}.qw::after{right:-8px;bottom:-8px;border-left:0;border-top:0;border-radius:0 0 12px 0}@keyframes cb{50%{transform:scale(1.35)}}
+.qw i{position:absolute;left:0;right:0;height:3px;background:var(--cy);box-shadow:0 0 14px var(--cy);animation:qs 2s ease-in-out infinite alternate}
+.ovq b{font-size:17px}.ovq small{color:var(--mut);font:12px monospace;color:var(--gr)}
+.ovx{border:1px solid rgba(255,255,255,.25);background:rgba(15,23,42,.8);color:#fff;border-radius:999px;padding:8px 18px;cursor:pointer}
+.ovc{flex:1;min-width:0;border-radius:26px;overflow:auto;border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 90px rgba(0,0,0,.65),0 0 0 6px rgba(255,255,255,.04);background:#070a12;-webkit-overflow-scrolling:touch}
+.ovx2{position:absolute;top:-10px;right:-8px;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:#0f172a;color:#fff;font-size:16px;cursor:pointer}
+@media(max-width:860px){.ovq{display:none}.ovp{gap:0}}
+.card.rv{transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1),scale .35s cubic-bezier(.2,1.2,.3,1),filter .35s,box-shadow .35s,background .35s;min-height:300px;padding-bottom:112px;cursor:pointer}
+.active .card.rv{transition-delay:calc(var(--d,0)*1ms + 250ms),calc(var(--d,0)*1ms + 250ms),0s,0s,0s,0s}
+.cards.hv .card:not(.f){filter:blur(4px) brightness(.5);scale:.92}
+.card.f{scale:1.1;z-index:3;box-shadow:0 22px 60px rgba(0,0,0,.65),0 0 0 2px var(--c);background:rgba(255,255,255,.1)}
+.s5 .h2{transition:opacity .7s,transform .7s,filter .35s}.s5.hv .h2{filter:blur(3px) brightness(.5)}
+.more{position:absolute;left:12px;right:12px;bottom:12px;height:94px}
+.more>*{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;transition:.3s}
+.hnt{font-size:12px;opacity:.4}.card.f .hnt{opacity:0}
+.inf{font-size:13px;line-height:1.5;color:#e2e8f0;opacity:0;transform:translateY(8px)}.card.f:not(.c) .inf{opacity:1;transform:none}
+.more>.go2{inset:auto;left:50%;top:50%;opacity:0;pointer-events:none;transform:translate(-50%,-30%) scale(.7);padding:10px 20px;font-size:15px;white-space:nowrap}
+.card.f.c .go2{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+@media(max-width:860px){.card.rv{min-height:0;padding-bottom:14px;flex-wrap:wrap}.more{position:relative;left:auto;right:auto;bottom:auto;width:100%;height:0;overflow:hidden;opacity:0;transition:height .4s,opacity .4s}.card.f .more{height:96px;opacity:1;margin-top:6px}.hnt{display:none}.card.f{scale:1.04}}
+.gm{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:20px 20px 110px;visibility:hidden;opacity:0;transition:opacity .35s,visibility 0s .35s}.gm.on{visibility:visible;opacity:1;transition-delay:0s}
+.gmbg{position:absolute;inset:0;background:rgba(3,6,14,.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.gmp{position:relative;width:min(560px,100%);border-radius:22px;overflow:hidden;background:#0a0f1c;border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 90px rgba(0,0,0,.7);transform:scale(.85);transition:transform .5s cubic-bezier(.2,1.3,.3,1)}.gm.on .gmp{transform:none}.gmp.gl2{animation:gj .42s steps(1)}
+.gmt{padding:10px 14px;font:12px monospace;color:var(--cy);border-bottom:1px solid rgba(255,255,255,.1)}
+.gmc{position:relative;min-height:320px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
+.gmx{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(15,23,42,.9);color:#fff;font-size:22px;cursor:pointer;z-index:2}
+.pop{position:absolute;background:#2a0a0a;border:2px solid var(--rd);border-radius:10px;padding:8px 12px;font-size:13px;text-align:left;z-index:2;animation:popin .25s steps(3);box-shadow:0 0 20px rgba(255,77,77,.5);max-width:70%}.pop small{display:block;color:#f87171;font:11px monospace}
+@keyframes popin{from{transform:scale(.3) rotate(var(--r));opacity:0}}
+.bait{font-size:26px;font-weight:700}.bait span{display:block;font-size:15px;color:var(--cy);margin-top:6px;font-weight:400}
+.big{font-size:clamp(30px,7vw,52px);font-weight:700;color:var(--rd);animation:glitch 1s infinite}
+.win{position:absolute;inset:0;background:linear-gradient(160deg,#0a58b5,#06316b);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.wr{width:52px;height:52px;border:5px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.pbar{width:70%;height:10px;border-radius:9px;background:rgba(255,255,255,.18);overflow:hidden}.pbar u{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--gr));border-radius:9px}
+.fld{width:min(100%,360px);padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);font:15px monospace;text-align:left;min-height:44px;letter-spacing:1px;overflow:hidden}
+.otp{display:flex;gap:8px}.otp b{width:38px;height:48px;border-radius:10px;border:2px solid var(--cy);display:grid;place-items:center;font:700 22px monospace}
+.ok{font-size:clamp(28px,6vw,44px);font-weight:700;color:var(--gr);animation:pop .5s;text-shadow:0 0 24px rgba(52,211,153,.6)}
+.bk{display:flex;align-items:center;width:100%;gap:8px;font-size:44px}.bk small{display:block;font-size:12px;color:var(--mut)}
+.lane{flex:1;position:relative;height:70px}.fl{position:absolute;left:0;top:20px;font-size:26px;animation:fly 1s ease-in forwards}@keyframes fly{0%{transform:translate(0,0) scale(1);opacity:1}50%{transform:translate(calc(var(--w)*.5),-28px)}100%{transform:translate(var(--w),0) scale(.4);opacity:0}}
+.cld.done{filter:drop-shadow(0 0 20px var(--gr))}
+.tli{animation:tg 5s infinite;animation-delay:calc(var(--d,0)*2ms)}.tli:hover{animation:tg .5s infinite}
+@keyframes tg{0%,93%,100%{clip-path:inset(0);text-shadow:none}94%{clip-path:inset(15% 0 45% 0);transform:translateX(-5px);text-shadow:2px 0 #f0c,-2px 0 #0ff}96%{clip-path:inset(55% 0 5% 0);transform:translateX(5px)}97%{clip-path:inset(0);transform:translateX(-2px);text-shadow:-2px 0 #f0c,2px 0 #0ff}}
+.em{position:fixed;z-index:35;font-style:normal;font-size:var(--s);pointer-events:none;animation:emf 1.6s ease-out forwards}@keyframes emf{from{transform:scale(.2);opacity:1}to{transform:translate(var(--dx),-170px) rotate(var(--r)) scale(1.2);opacity:0}}
+/* nav */
+.nav{position:fixed;z-index:30;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px))}
+.nb{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(15,23,42,.7);color:#fff;font-size:20px;cursor:pointer;backdrop-filter:blur(8px)}
+.nb:active{transform:scale(.9)}
+.dots{display:flex;gap:8px;align-items:center}
+.dot{width:9px;height:9px;border-radius:99px;background:rgba(255,255,255,.3);border:0;padding:0;cursor:pointer;transition:.3s}.dot.on{width:28px;background:var(--cy)}
+.cnt{position:fixed;z-index:30;top:calc(env(safe-area-inset-top,0px) + 12px);right:14px;font-size:13px;color:var(--mut)}
+.pg{position:fixed;z-index:30;top:env(safe-area-inset-top,0px);left:0;height:3px;background:linear-gradient(90deg,var(--cy),var(--gr));transition:width .6s}
+@media(max-width:860px){
+.cards{grid-template-columns:1fr;gap:10px}.card{display:flex;gap:14px;align-items:center;text-align:left;padding:14px}.ic{width:64px;height:64px;margin:0;flex:none;border-radius:18px}.ic svg{width:34px;height:34px}
+.s3 .wrap{flex-direction:column;gap:12px}.s3 .ev{width:100%;flex:none;max-width:none}.panel{padding:14px;width:100%}
+.ev{width:100%}
+.tl{grid-template-columns:1fr 1fr}.col{display:contents}.qrb{grid-column:1/-1;order:-1}.qr{width:140px}
+.slide{padding-bottom:84px}
+}
+@media(max-height:620px){.slide{padding-top:10px}.ev{margin-top:6px}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<div class="orb o1"></div><div class="orb o2"></div><div class="grid"></div>
+
+<section class="slide s1">
+ <div class="bell rv" style="--d:0">🔔</div>
+ <h1 class="h1"><span class="rv" style="--d:200;display:block">ถ้าพรุ่งนี้...</span>
+ <span class="rv" style="--d:900;display:block">สรรพากรส่งอีเมลมาบอกให้คุณ<span class="go">อัปเดตข้อมูลภาษีด่วน</span> มิฉะนั้นจะมีปัญหา</span>
+ <span class="rv" style="--d:1800;display:block">คุณจะกล้า<span class="bad">เมิน</span> หรือรีบ<span class="bad">คลิก</span>?</span></h1>
+ <button class="btn rv" style="--d:2600" id="demo">▶ แสดงตัวอย่าง</button>
+ <div class="hint rv" style="--d:3000">กดปุ่มเพื่อดูอีเมล · หรือกด → / ปัดซ้ายเพื่อไปต่อ</div>
+</section>
+
+<section class="slide s2">
+ <div class="cap rv" style="--d:100">ให้ทุกท่านลองสังเกตอีเมลนี้ ว่าพบ<span style="color:var(--am)">สิ่งผิดปกติ</span>หรือไม่</div>
+ <div class="ev scan rv" style="--d:400" id="v2"></div>
+ <button class="btn rv" style="--d:900;margin-top:16px" onclick="next()">🔍 ตรวจสอบกัน</button>
+</section>
+
+<section class="slide s3">
+ <div class="wrap">
+  <div class="ev rv" style="--d:100" id="v3"></div>
+  <div class="panel rv" style="--d:400">
+   <div class="pc on"><h3>🩺 วินิจฉัยอีเมลฉบับนี้</h3><p>กดปุ่ม “ถัดไป” เพื่อซูมดูจุดผิดปกติทีละจุด</p></div>
+   <div class="pc"><h3 style="color:var(--rd)">จุดที่ 1 · โดเมนผู้ส่งปลอม</h3><div class="dom f"><b>rd-go.th</b><em>ปลอม · มีขีดกลาง</em></div><div class="dom t"><b>rd.go.th</b><em>ของจริง</em></div><p>ดูเผินๆ เหมือนจริง แต่โดเมนผิดเพียงขีดเดียว</p></div>
+   <div class="pc"><h3 style="color:var(--rd)">จุดที่ 2 · ปุ่มดักขโมยรหัสผ่าน</h3><p>ปุ่มนี้พาไปหน้า Login ปลอม เพื่อเก็บ<b>ชื่อผู้ใช้และรหัสผ่าน</b>ของคุณ</p><p style="color:var(--am)">💡 อย่าคลิก! เข้าเว็บสรรพากรเองจากเบราว์เซอร์</p></div>
+   <div class="pc"><h3 style="color:var(--rd)">สรุป: Phishing 100%</h3><p>① โดเมนผู้ส่งปลอม &nbsp;② ลิงก์ดักข้อมูล</p><p>+ สร้างความเร่งด่วน (31 ต.ค.) เพื่อให้เรารีบคลิก</p></div>
+  </div>
+ </div>
+ <div class="chips rv" style="--d:700"><button class="chip" data-s="1">① ผู้ส่ง</button><button class="chip" data-s="2">② ปุ่ม</button><button class="chip" data-s="3">ภาพรวม</button></div>
+</section>
+
+<section class="slide s4">
+ <span class="tag rv" style="--d:100">ความเข้าใจผิดอันดับ 1</span>
+ <div class="mis rv" style="--d:300"><h2 class="h1"><span class="st">“SME เล็กๆ แฮกเกอร์ไม่สนใจหรอก”</span></h2><div class="x"><i></i><i></i></div><div class="stamp">ผิด!</div></div>
+ <div class="net" id="net"><div class="netov"></div></div>
+ <div class="nt">แฮกเกอร์ใช้วิธี<b>หว่านแห</b> · ธุรกิจเล็กยิ่งเป็น<b>เป้าหมายง่าย</b></div>
+ <div class="fix">ความปลอดภัยไซเบอร์<br>เป็นหน้าที่ของทุกคน</div>
+ <button class="btn" id="b4" onclick="next()">เฉลย ✨</button>
+</section>
+
+<section class="slide s5">
+ <h2 class="h2 rv">4 หลักการ Cyber Hygiene สำหรับ SME</h2>
+ <div class="cards">
+  <div class="card rv" style="--d:300;--c:#22d3ee"><span class="n">1</span><div class="ic i1"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></div><div><h3>คิดก่อนคลิก</h3><p>เช็กผู้ส่งและลิงก์เสมอ</p></div></div>
+  <div class="card rv" style="--d:550;--c:#34d399"><span class="n">2</span><div class="ic i2"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div><div><h3>อัปเดตระบบสม่ำเสมอ</h3><p>อัปเดต Windows/แอป ปิดช่องโหว่</p></div></div>
+  <div class="card rv" style="--d:800;--c:#fbbf24"><span class="n">3</span><div class="ic i3"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/><circle cx="12" cy="16" r="1.3"/><path d="M2.5 7.5V5h2M21.5 7.5V5h-2" opacity=".6"/></svg></div><div><h3>รหัสผ่านแข็งแรง &amp; MFA</h3><p>ล็อกอิน 2 ชั้น</p></div></div>
+  <div class="card rv" style="--d:1050;--c:#a78bfa"><span class="n">4</span><div class="ic i4"><svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4.5 4.5 0 0117 18z"/><path d="M12 15V9m0 0l-2.5 2.5M12 9l2.5 2.5"/></svg></div><div><h3>สำรองข้อมูล</h3><p>Backup ข้อมูลสำคัญแยกไว้เสมอ</p></div></div>
+ </div>
+</section>
+
+<section class="slide s6">
+ <h2 class="h2 rv">แผนปฏิบัติการ Cyber Hygiene 30 วัน สำหรับ SME</h2>
+ <div class="tl">
+  <div class="col">
+   <div class="tli rv" style="--d:300;--c:#22d3ee"><b>วันที่ 1–3 · ⚡ เร็วสุด</b><span>ตั้งรหัสผ่านใหม่ + เปิด MFA</span><small>อีเมล ธนาคาร คลาวด์ ทำเสร็จได้ในวันเดียว</small></div>
+   <div class="tli rv" style="--d:550;--c:#34d399"><b>วันที่ 4–10 · ⚡ เร็ว</b><span>เปิดอัปเดตอัตโนมัติ Windows/แอป</span><small>ตั้งค่าครั้งเดียว ระบบอัปเดตเอง</small></div>
+  </div>
+  <div class="qrb rv" style="--d:100"><div class="qr"><img id="qimg" alt="QR Code Checklist" src="data:image/png;base64,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"></div><p>สแกนเพื่อรับ Checklist ไปใช้กับธุรกิจของคุณได้ทันที</p><button class="btn sbtn" onclick="openCL()">📱 สแกน</button></div>
+  <div class="col">
+   <div class="tli rv" style="--d:800;--c:#fbbf24"><b>วันที่ 11–20 · 🕒 ใช้เวลา</b><span>สำรองข้อมูลแบบ 3-2-1</span><small>ต้องเลือกที่เก็บ + ทดสอบกู้คืนจริง</small></div>
+   <div class="tli rv" style="--d:1050;--c:#a78bfa"><b>วันที่ 21–30 · 🔁 ต่อเนื่อง</b><span>อบรมทีม &amp; ซ้อมจับ Phishing</span><small>สร้างนิสัย “คิดก่อนคลิก” ทำซ้ำทุกเดือน</small></div>
+  </div>
+ </div>
+</section>
+
+<section class="slide s7">
+ <div class="shield rv"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+ <h1 class="h1 grad rv" style="--d:300">Cyber Hygiene:<br>ป้องกันไว้ ดีกว่าแก้ทีหลัง</h1>
+ <p class="sub rv" style="--d:600">ทีม 2: Cyber Hygiene Fundamentals</p>
+ <div class="qa rv" style="--d:900">Q&amp;A - ขอบคุณครับ/ค่ะ</div>
+</section>
+</div>
+
+<template id="cltpl"><style>
+:host{display:block;--bg:#070a12;--card:#12151f;--line:#232838;--tx:#eef1f8;--mu:#8b93a8;
+--c1:#22d3ee;--c2:#34d399;--c3:#fbbf24;--c4:#a78bfa;box-sizing:border-box;
+padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+:host([data-theme="light"]){--bg:#eef1f7;--card:#fff;--line:#dde2ee;--tx:#131826;--mu:#5d6580}
+:host([data-theme="dark"]){--bg:#070a12;--card:#12151f;--line:#232838;--tx:#eef1f8;--mu:#8b93a8}
+
+*{box-sizing:border-box}
+.clb{margin:0;background:var(--bg);color:var(--tx);font-family:Prompt,"Noto Sans Thai",system-ui,sans-serif;line-height:1.6;min-height:100vh;overflow-x:hidden}
+.clb::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;opacity:.35;mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 75%);pointer-events:none}
+.wrap{position:relative;max-width:1180px;margin:0 auto;padding:20px clamp(14px,4vw,32px) 90px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--mu)}
+.btn{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer;transition:.2s}
+.btn:hover{border-color:var(--c1)}
+.btn:focus-visible,.item:focus-visible,summary:focus-visible{outline:2px solid var(--c1);outline-offset:2px}
+h1{font-size:clamp(26px,6vw,38px);line-height:1.2;margin:26px 0 6px;font-weight:700}
+.sub{color:var(--mu);margin:0 0 22px;max-width:56ch}
+.hero{display:flex;gap:22px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;flex-wrap:wrap;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(var(--glow,#22d3ee33),transparent 70%);transition:.8s}
+.ring{position:relative;width:132px;height:132px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:url(#g);stroke-dasharray:352;stroke-dashoffset:352;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.pct{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:30px;font-weight:700;line-height:1}
+.pct small{display:block;font-size:11px;font-weight:400;color:var(--mu);margin-top:4px}
+.stats{flex:1;min-width:200px;z-index:1}
+.stats b{font-size:18px}
+.msg{color:var(--mu);font-size:14px;margin:4px 0 12px}
+.dayrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px}
+.chip{border:1px solid var(--line);border-radius:99px;padding:3px 12px;color:var(--mu)}
+.chip b{color:var(--tx);font-size:13px}
+.tl{display:flex;gap:6px;margin:22px 0 8px}
+.tl a{flex:1;text-decoration:none;color:var(--mu);font-size:12px;text-align:center}
+.tl i{display:block;height:6px;border-radius:9px;background:var(--line);margin-bottom:6px;overflow:hidden}
+.tl i span{display:block;height:100%;width:0;background:var(--c);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.tl a.on{color:var(--tx)}
+.ph{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:16px;margin:16px 0;overflow:hidden;transition:box-shadow .4s,border-color .4s}
+.ph.done{box-shadow:0 0 0 1px var(--c),0 0 32px -8px var(--c)}
+.ph>summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;gap:14px;align-items:center}
+.ph>summary::-webkit-details-marker{display:none}
+.ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--c) 15%,transparent);flex:none}
+.ph .h{flex:1;min-width:0}
+.ph .d{font-size:12.5px;color:var(--c);font-weight:600}
+.ph .t{font-size:17px;font-weight:600;line-height:1.35}
+.ph .cnt{font-size:12px;color:var(--mu);white-space:nowrap}
+.chev{transition:transform .35s;color:var(--mu)}
+details[open] .chev{transform:rotate(180deg)}
+.why{margin:0 18px 6px;padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--c) 9%,transparent);font-size:13.5px;color:var(--mu)}
+.list{padding:8px 10px 12px}
+.item{display:flex;gap:12px;padding:12px 10px;border-radius:12px;cursor:pointer;align-items:flex-start;transition:background .2s;position:relative;-webkit-tap-highlight-color:transparent}
+.item:hover{background:color-mix(in srgb,var(--c) 7%,transparent)}
+.box{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);flex:none;margin-top:2px;display:grid;place-items:center;transition:.25s;position:relative}
+.box svg{width:16px;height:16px;fill:none;stroke:#06121a;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .35s .1s}
+.item.ck .box{background:var(--c);border-color:var(--c);transform:scale(1.0);animation:pop .4s}
+.item.ck .box svg{stroke-dashoffset:0}
+@keyframes pop{40%{transform:scale(1.25)}}
+.item .tx{flex:1}
+.item .n{font-weight:500;transition:.3s}
+.item .tip{font-size:13px;color:var(--mu);margin-top:2px}
+.item.ck .n{color:var(--mu);text-decoration:line-through;text-decoration-color:var(--c)}
+.rip{position:absolute;border-radius:50%;background:var(--c);opacity:.35;transform:scale(0);animation:rp .6s ease-out forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(1);opacity:0}}
+.extra{margin-top:30px;display:grid;gap:12px}
+.box2{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.box2 h3{margin:0 0 6px;font-size:16px}
+.box2 ul{margin:0;padding-left:20px;font-size:14px;color:var(--mu)}
+.box2 li{margin:3px 0}
+.box2 code{background:var(--bg);padding:1px 6px;border-radius:6px;color:var(--c1)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,120px);background:var(--card);border:1px solid var(--c2);padding:12px 20px;border-radius:14px;font-size:14px;transition:transform .5s cubic-bezier(.2,1.2,.3,1);z-index:9;max-width:90vw;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:8}
+.foot{text-align:center;color:var(--mu);font-size:12px;margin-top:28px}
+@media(max-width:979px){.wrap{max-width:760px}.extra{margin-top:8px}}
+@media(min-width:980px){
+ h1{font-size:clamp(34px,3.4vw,46px);margin-top:30px}
+ .layout{display:grid;grid-template-columns:minmax(330px,390px) minmax(0,1fr);gap:32px;align-items:start}
+ .side{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;padding:2px;scrollbar-width:thin}
+ .tl{margin-top:18px}.extra{margin-top:12px}
+ #app .ph:first-child{margin-top:0}
+ .item{padding:14px 12px}.item .n{font-size:16px}.item .tip{font-size:13.5px}
+ .ph>summary{padding:18px 22px}.why{margin:0 22px 6px}
+}
+@media(max-width:560px){
+ h1{margin-top:18px}
+ .hero{justify-content:center;text-align:center;padding:18px 14px}
+ .dayrow{justify-content:center}
+ .ph>summary{padding:14px;gap:10px}.ico{width:38px;height:38px;font-size:19px}
+ .ph .t{font-size:15.5px}.ph .cnt{font-size:11px}
+ .why{margin:0 12px 4px;font-size:13px}.list{padding:6px 4px 10px}
+ .item{padding:12px 8px}.item .n{font-size:15px}
+ .btn{padding:9px 12px}
+}
+@media print{.layout{display:block}.side{position:static;max-height:none}.clb::before,.top .btn,canvas,.toast{display:none}details>*{display:block}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style><div class="clb">
+<canvas id="cv"></canvas>
+<div class="wrap">
+  <div class="top"><span>🛡️ Cyber Hygiene · ทีม 2</span>
+    <span><button class="btn" id="th">🌓 ธีม</button> <button class="btn" id="rs">รีเซ็ต</button></span></div>
+  <h1>แผน Cyber Hygiene 30 วัน<br>สำหรับธุรกิจ SME</h1>
+  <p class="sub">ทำทีละข้อ ติ๊กเมื่อเสร็จ ระบบจะจำความคืบหน้าไว้ในเครื่องนี้ ไม่ต้องใช้อินเทอร์เน็ตหรือสมัครสมาชิก</p>
+
+  <div class="layout"><aside class="side"><section class="hero" id="hero">
+    <div class="ring"><svg width="132" height="132" viewBox="0 0 132 132"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs><circle class="bg" cx="66" cy="66" r="56"/><circle class="fg" id="fg" cx="66" cy="66" r="56"/></svg>
+      <div class="pct"><div><span id="pv">0</span>%<small id="pc">0 / 0 ข้อ</small></div></div></div>
+    <div class="stats"><b id="lv">เริ่มต้นกันเลย</b><div class="msg" id="mg"></div>
+      <div class="dayrow"><span class="chip">วันที่ <b id="dn">1</b> / 30</span><span class="chip">ช่วงนี้: <b id="cur">-</b></span><button class="btn" id="st">ตั้งวันเริ่มเป็นวันนี้</button></div></div>
+  </section>
+
+  <nav class="tl" id="tl"></nav>
+  <div class="extra">
+    <div class="box2"><h3>🚨 ถ้าโดนหลอกไปแล้ว ทำทันที</h3><ul>
+      <li>เปลี่ยนรหัสผ่านบัญชีที่เกี่ยวข้อง และตัดการเชื่อมต่อเครื่องจากอินเทอร์เน็ต</li>
+      <li>โทรแจ้งธนาคารเพื่ออายัดธุรกรรม และแจ้งความออนไลน์ที่ <code>thaipoliceonline.go.th</code></li>
+      <li>สายด่วนศูนย์ AOC ตำรวจไซเบอร์ <code>1441</code> (ตรวจสอบเบอร์ล่าสุดก่อนใช้งาน)</li>
+      <li>แจ้งทีมงานทุกคน และเก็บหลักฐาน เช่น อีเมล ลิงก์ สลิป ภาพหน้าจอ</li></ul></div>
+    <div class="box2"><h3>🔎 เช็กโดเมนก่อนคลิก</h3><ul>
+      <li>เว็บกรมสรรพากรจริงคือ <code>rd.go.th</code> ไม่ใช่ <code>rd-go.th</code></li>
+      <li>หน่วยงานรัฐไทยลงท้าย <code>.go.th</code> เมื่อไม่แน่ใจให้พิมพ์ที่อยู่เว็บเองแทนการกดลิงก์</li>
+      <li>ถ้าอีเมลเร่งรัด ขู่ หรือให้ล็อกอินด่วน ให้ตั้งข้อสงสัยไว้ก่อน</li></ul></div>
+  </div></aside><div id="app"></div></div>
+  <div class="foot">ข้อมูลเป็นแนวปฏิบัติพื้นฐาน อ้างอิงแนวคิดของ NIST CSF, CISA และ ThaiCERT · ไม่ใช่คำปรึกษาด้านกฎหมาย</div>
+</div>
+<div class="toast" id="ts"></div>
+
+</div></template>
+<div class="ov" id="ov" aria-hidden="true"><div class="ovbg" onclick="closeCL()"></div><div class="ovp">
+<aside class="ovq"><div class="qw"><img id="qimg2" alt="QR Code"><i></i></div><b>สแกนเพื่อรับ Checklist</b><small id="acc">&gt; ACCESS GRANTED</small><span class="sub" style="font-size:13px">หรือใช้งานหน้าทางขวาได้เลย</span><button class="ovx" onclick="closeCL()">ปิด ✕ (Esc)</button></aside>
+<div class="ovc" id="clhost"></div><button class="ovx2" onclick="closeCL()" aria-label="ปิด">✕</button></div></div>
+<div class="gm" id="gm"><div class="gmbg"></div><div class="gmp" id="gmp"><div class="gmt" id="gmt"></div><div class="gmc" id="gmc"></div></div><button class="gmx" onclick="closeGM()" aria-label="ยกเลิก">✕</button></div>
+<div class="term" id="term"></div>
+<template id="em">
+<div class="eb"><span>←</span><span>⋮</span></div>
+<div class="esub">แจ้งกำหนดการอัปเดตข้อมูลนิติบุคคลในระบบภาษีอิเล็กทรอนิกส์ (e-Filing) ประจำปี 2569 <i>Inbox</i></div>
+<div class="efrom"><div class="av2">RD</div><div><b>กรมสรรพากร (e-Filing)</b> <span class="hl r1"><small>&lt;noreply@rd-go.th&gt;</small><u class="ring"></u></span><div class="to">to accounts@greenleaf-organics.co.th ▾</div></div><div class="dt">11 Oct 2026, 09:30 (2 hours ago)</div></div>
+<div class="ebody">
+<p><b>เรียน ท่านผู้ประกอบการนิติบุคคล (บริษัท กรีนลีฟ ออร์แกนิก จำกัด)</b></p>
+<p>ตามที่กรมสรรพากรได้มีการปรับปรุงระบบการยื่นแบบแสดงรายการภาษีอิเล็กทรอนิกส์ (e-Filing) เพื่อเพิ่มประสิทธิภาพและความปลอดภัยในการทำธุรกรรมทางภาษีของภาคธุรกิจ</p>
+<p>เพื่อป้องกันการเกิดข้อขัดข้องในการยื่นแบบภาษีในรอบบัญชีถัดไป ทางกรมฯ ขอความร่วมมือให้ท่านดำเนินการเข้าสู่ระบบเพื่อ "<b>ยืนยันและอัปเดตข้อมูลผู้เสียภาษี</b>" ให้เป็นปัจจุบัน ภายในวันที่ 31 ตุลาคม 2569</p>
+<p>ท่านสามารถดำเนินการผ่านระบบ e-Filing ได้ด้วยตนเอง โดยคลิกลิงก์ด้านล่างเพื่อเข้าสู่ระบบความปลอดภัยระดับสูง (Secure Login):</p>
+<span class="hl r2"><span class="cta">เข้าสู่ระบบ e-Filing เพื่อยืนยันข้อมูล</span><u class="ring"></u></span>
+<p>หากท่านมีข้อสงสัยเพิ่มเติมเกี่ยวกับการใช้งานระบบ สามารถติดต่อศูนย์สารนิเทศสรรพากร (RD Intelligence Center) โทร. 1161</p>
+<p>ขอแสดงความนับถือ<br>กองบริหารการเสียภาษีทางอิเล็กทรอนิกส์<br>กรมสรรพากร</p>
+<div class="ft">อีเมลฉบับนี้เป็นการแจ้งเตือนอัตโนมัติจากระบบ กรุณาอย่าตอบกลับอีเมลนี้<br>This is an automated message, please do not reply.</div>
+</div></template>
+
+<div class="toast" id="toast"><div class="av">RD</div><div><b>กรมสรรพากร (e-Filing) · ตอนนี้</b>แจ้งกำหนดการอัปเดตข้อมูลนิติบุคคล… <i>ด่วน!</i></div></div>
+<div class="warn" id="warn">⚠️ ถ้าคลิกตอนนี้ รหัสผ่านของคุณจะถูกขโมย!<br><small>(นี่คือตัวอย่าง ไม่ใช่ลิงก์จริง)</small></div>
+<div class="pg" id="pg"></div><div class="cnt" id="cnt"></div>
+<div class="nav"><button class="nb" id="pv" aria-label="ก่อนหน้า">←</button><div class="dots" id="dots"></div><button class="nb" id="nx" aria-label="ถัดไป">→</button><button class="nb" id="fs" aria-label="เต็มจอ" style="font-size:16px">⛶</button><button class="nb" id="mt" aria-label="เสียง" style="font-size:16px">🔊</button></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const slides=$$('.slide'),MAX=[0,0,3,2,0,0,0];let cur=0;
+const T=$('#em').innerHTML;$$('.ev').forEach(v=>v.innerHTML='<div class="email">'+T+'</div>');
+const dots=$('#dots');slides.forEach((_,i)=>{const d=document.createElement('button');d.className='dot';d.onclick=()=>show(i,0);dots.append(d)});
+let AC,mute=false;
+function A(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.state=='suspended'&&AC.resume()}catch(e){}return AC}
+function tone(f,g,d,ty='sine',v=.2,w=0){const a=A();if(!a||mute)return;const t=a.currentTime+w,o=a.createOscillator(),k=a.createGain();o.type=ty;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(g,t+d);k.gain.setValueAtTime(.001,t);k.gain.exponentialRampToValueAtTime(v,t+.01);k.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(k).connect(a.destination);o.start(t);o.stop(t+d+.05)}
+function noise(d,f0,f1,v=.2,w=0){const a=A();if(!a||mute)return;const t=a.currentTime+w,b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=Math.random()*2-1;const s=a.createBufferSource(),f=a.createBiquadFilter(),k=a.createGain();s.buffer=b;f.type='bandpass';f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+d);k.gain.setValueAtTime(v,t);k.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(f).connect(k).connect(a.destination);s.start(t)}
+const SFX={ping(){tone(880,880,.5,'sine',.25);tone(1320,1320,.5,'sine',.25,.14)},tick(){noise(.035,3500,1800,.3);tone(220,90,.05,'square',.06)},whoosh(){noise(.45,300,3200,.18)},slam(){tone(170,40,.4,'sine',.55);noise(.25,900,100,.3)},chime(){[523,659,784,1047].forEach((f,i)=>tone(f,f,.55,'sine',.16,i*.1))},chime1(){tone(990,1320,.2,'sine',.15)},alarm(){tone(520,520,.16,'square',.07);tone(390,390,.2,'square',.07,.18)},scan(){tone(250,1400,.7,'sawtooth',.05)}};
+function confetti(){const s=slides[6];for(let i=0;i<46;i++){const c=document.createElement('i');c.className='cf';c.style.cssText=`left:${Math.random()*100}%;background:hsl(${Math.random()*360} 90% 60%);animation-delay:${Math.random()*.6}s;animation-duration:${2+Math.random()*1.8}s`;s.append(c);setTimeout(()=>c.remove(),4600)}SFX.chime()}
+function slideFx(i){$$('.h2,.tag,.sub,.qa,.tli b,.tli span,.tli small',slides[i]).forEach(scr);term(i);if(i==4||i==5)[0,1,2,3].forEach(k=>setTimeout(()=>cur==i&&SFX.tick(),450+k*250));if(i==6)setTimeout(()=>cur==6&&confetti(),600);if(i==1)setTimeout(()=>cur==1&&SFX.scan(),500)}
+function stepFx(i,n){if(i==3){$('#b4').textContent=n==1?'ทำไมล่ะ? 🎣':'เฉลย ✨';if(n==1)SFX.slam();if(n==2){SFX.whoosh();[0,1,2,3,4,5].forEach(k=>setTimeout(()=>cur==3&&SFX.alarm(),1100+k*150));setTimeout(()=>cur==3&&SFX.chime(),2200)}}}
+function pos(el,root){let x=0,y=0;while(el&&el!==root){x+=el.offsetLeft;y+=el.offsetTop;el=el.offsetParent}return[x,y]}
+function place(v,tgt){const e=v.firstChild,cw=v.clientWidth,f=cw/760,eh=e.offsetHeight,H=eh*f;v.style.height=H+'px';
+ if(!tgt){e.style.transform=`scale(${f})`;return}
+ const[px,py]=pos(tgt,e),tw=tgt.offsetWidth,th=tgt.offsetHeight,S=Math.max(f,Math.min(2.6,cw*.8/tw));
+ let X=cw/2-S*(px+tw/2),Y=H/2-S*(py+th/2);X=Math.min(0,Math.max(cw-S*760,X));Y=Math.min(0,Math.max(H-S*eh,Y));
+ e.style.transform=`translate(${X}px,${Y}px) scale(${S})`}
+function layout(){const s=slides[cur],st=+s.dataset.step||0;
+ place($('#v2'));const v=$('#v3');
+ v.dataset.r=st==1?'1':st==2?'1 2':st==3?'1 2':'';
+ place(v,st==1?$('.r1',v):st==2?$('.r2',v):null)}
+function setStep(n){const s=slides[cur];s.dataset.step=n;stepFx(cur,n);
+ if(cur==2){$$('.pc',s).forEach((p,i)=>p.classList.toggle('on',i==n));$$('.chip',s).forEach(c=>c.classList.toggle('on',+c.dataset.s==n))}
+ layout()}
+function show(i,step){i=Math.max(0,Math.min(slides.length-1,i));if(i!=cur)glitch();cur=i;slideFx(i);
+ slides.forEach((s,k)=>{s.classList.toggle('active',k==i);s.classList.toggle('past',k<i)});
+ $$('.dot').forEach((d,k)=>d.classList.toggle('on',k==i));
+ $('#pg').style.width=((i+1)/slides.length*100)+'%';$('#cnt').textContent=(i+1)+' / '+slides.length;
+ requestAnimationFrame(()=>setStep(step))}
+function next(){SFX.tick();const st=+slides[cur].dataset.step||0;if(st<MAX[cur]){glitch();setStep(st+1)}else if(cur<slides.length-1)show(cur+1,0)}
+function prev(){SFX.tick();const st=+slides[cur].dataset.step||0;if(st>0){glitch();setStep(st-1)}else if(cur>0)show(cur-1,MAX[cur-1])}
+$('#nx').onclick=next;$('#pv').onclick=prev;
+$('#fs').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();
+addEventListener('keydown',e=>{if(gm.classList.contains('on')){if(e.key=='Escape')closeGM();return}if(ov.classList.contains('on')){if(e.key=='Escape')closeCL();return}if(e.target.closest&&e.target.closest('button')&&(e.key==' '||e.key=='Enter'))return;if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}if(['ArrowLeft','PageUp'].includes(e.key))prev();if(e.key=='f')$('#fs').click()});
+let tx=0,ty=0;const stg=$('#stage');
+stg.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+stg.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)dx<0?next():prev()});
+$$('.chip').forEach(c=>c.onclick=()=>setStep(+c.dataset.s));
+addEventListener('resize',layout);
+document.fonts&&document.fonts.ready.then(layout);
+function ping(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),t=a.currentTime;[880,1320].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.001,t+i*.14);g.gain.exponentialRampToValueAtTime(.25,t+i*.14+.02);g.gain.exponentialRampToValueAtTime(.001,t+i*.14+.5);o.connect(g).connect(a.destination);o.start(t+i*.14);o.stop(t+i*.14+.55)})}catch(e){}}
+const toast=$('#toast');let busy=0;
+function openMail(){toast.classList.remove('on');if(cur==0)show(1,0)}
+$('#demo').onclick=()=>{if(busy)return;busy=1;SFX.ping();glitch();navigator.vibrate&&navigator.vibrate(120);toast.classList.add('on');setTimeout(()=>{if(toast.classList.contains('on'))openMail();busy=0},2600)};
+toast.onclick=openMail;
+$$('.cta').forEach(c=>c.onclick=()=>{const w=$('#warn');SFX.alarm();glitch();w.classList.add('on');setTimeout(()=>w.classList.remove('on'),1800)});
+$$('.chip,.dot').forEach(b=>b.addEventListener('click',()=>SFX.tick()));
+$('#mt').onclick=e=>{mute=!mute;e.target.textContent=mute?'🔇':'🔊'};
+const E=['🏪','🛒','☕','🥬','🍜','✂️','💊','📦'],ne=$('#net');for(let i=0;i<24;i++){const s=document.createElement('span');s.textContent=E[i%8];s.style.setProperty('--i',i);ne.append(s)}
+stg.addEventListener('pointerdown',e=>{const r=document.createElement('i');r.className='rpl';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';document.body.append(r);setTimeout(()=>r.remove(),700)});
+
+$$('.bad').forEach(b=>b.onclick=()=>{b.classList.add('shk');SFX.alarm();setTimeout(()=>b.classList.remove('shk'),500)});
+$('.shield').onclick=confetti;
+function mountCL(root,host){
+const PH=[
+{id:"p1",c:"#22d3ee",ic:"🔐",d:"วันที่ 1–7",t:"ตั้งรหัสผ่านใหม่ + เปิด MFA",
+why:"บัญชีที่ถูกยึดส่วนใหญ่เกิดจากรหัสผ่านซ้ำหรือเดาง่าย การเปิด MFA ช่วยกันการเจาะบัญชีได้เป็นส่วนใหญ่",
+items:[
+["ใช้ตัวจัดการรหัสผ่าน (Password Manager)","เช่น Bitwarden, 1Password หรือที่มีในเบราว์เซอร์ ช่วยสร้างและจำรหัสให้"],
+["รหัสผ่านทุกบัญชีไม่ซ้ำกัน ยาว 14 ตัวอักษรขึ้นไป","ใช้วลียาว ๆ จำง่ายแต่เดายาก ดีกว่าสั้นแต่ซับซ้อน"],
+["เปิด MFA ที่อีเมลธุรกิจ","อีเมลคือกุญแจสู่ทุกบัญชี ทำเป็นอย่างแรก"],
+["เปิด MFA ที่ธนาคาร, e-Filing, ระบบบัญชี และคลาวด์","เลือกแอป Authenticator แทน SMS เมื่อทำได้"],
+["เปลี่ยนรหัสเริ่มต้นของเราเตอร์ Wi-Fi และกล้อง CCTV","รหัสอย่าง admin/1234 ถูกสแกนหาโดยบอทตลอดเวลา"],
+["เลิกใช้บัญชีร่วมกัน และปิดบัญชีพนักงานที่ลาออก","1 คน 1 บัญชี ตรวจสอบย้อนหลังได้"],
+["เก็บ Recovery Code ไว้ที่ปลอดภัย","พิมพ์เก็บในตู้เซฟ หรือจดแยกจากเครื่อง"]]},
+{id:"p2",c:"#34d399",ic:"🛡️",d:"วันที่ 8–14",t:"อัปเดต Windows/แอปทั้งหมด",
+why:"แฮกเกอร์มักใช้ช่องโหว่เก่าที่มีแพตช์แล้ว แต่ผู้ใช้ยังไม่ได้อัปเดต",
+items:[
+["เปิด Windows Update แบบอัตโนมัติทุกเครื่อง","Settings > Windows Update แล้วกดตรวจหาอัปเดต"],
+["ย้ายเครื่องที่ใช้ระบบปฏิบัติการหมดอายุสนับสนุน","Windows 10 หมดการสนับสนุนปกติตั้งแต่ ต.ค. 2025 ควรอัปเกรดหรือสมัคร ESU"],
+["อัปเดตเบราว์เซอร์ Office PDF Reader และปลั๊กอิน","ปิดโปรแกรมแล้วเปิดใหม่เพื่อให้อัปเดตมีผล"],
+["เปิด Microsoft Defender หรือแอนตี้ไวรัสและสแกนเต็มระบบ","ไม่ต้องซื้อเพิ่มเสมอไป Defender เพียงพอสำหรับพื้นฐาน"],
+["อัปเดตเฟิร์มแวร์เราเตอร์ และ POS / เครื่องพิมพ์","ดูที่เว็บผู้ผลิต หรือขอให้ผู้ให้บริการอินเทอร์เน็ตช่วย"],
+["ถอนโปรแกรมที่ไม่ใช้ และห้ามติดตั้งซอฟต์แวร์เถื่อน","โปรแกรมเถื่อนเป็นช่องทางหลักของมัลแวร์"],
+["มือถือพนักงานที่เข้าถึงข้อมูลงาน ตั้งล็อกหน้าจอและอัปเดตระบบ","เปิดฟังก์ชันตามหาเครื่องและลบข้อมูลทางไกลไว้"]]},
+{id:"p3",c:"#fbbf24",ic:"💾",d:"วันที่ 15–21",t:"ตั้งระบบสำรองข้อมูล",
+why:"แรนซัมแวร์ ไฟไหม้ หรือเครื่องพัง ล้วนทำให้ข้อมูลหายได้ สำรองไว้ยังไงก็กู้คืนได้",
+items:[
+["ระบุข้อมูลสำคัญ: บัญชี ลูกค้า สต็อก ใบกำกับภาษี สัญญา","ถามตัวเองว่า ถ้าหายพรุ่งนี้ ธุรกิจเดินต่อได้ไหม"],
+["ทำตามกฎ 3-2-1","สำเนา 3 ชุด, สื่อเก็บ 2 ประเภท, อย่างน้อย 1 ชุดอยู่นอกสถานที่"],
+["ตั้งสำรองอัตโนมัติ (คลาวด์หรือ NAS)","อย่าพึ่งการจำ ให้ระบบทำเองทุกวันหรือทุกสัปดาห์"],
+["เก็บอย่างน้อย 1 ชุดแบบออฟไลน์ หรือแก้ไขไม่ได้","ถอดฮาร์ดดิสก์ออกหลังสำรอง แรนซัมแวร์จะเข้าไม่ถึง"],
+["ทดลองกู้คืนไฟล์จริง 1 ครั้ง","สำรองที่ไม่เคยทดสอบ ถือว่ายังไม่มีสำรอง"],
+["เข้ารหัสข้อมูลสำรอง และคุมสิทธิ์คนที่เข้าถึง","โดยเฉพาะข้อมูลส่วนบุคคลของลูกค้า (PDPA)"],
+["จดวิธีกู้คืนและผู้รับผิดชอบไว้เป็นเอกสาร","เผื่อคนหลักไม่อยู่"]]},
+{id:"p4",c:"#a78bfa",ic:"🎣",d:"วันที่ 22–30",t:"อบรมทีม & ซ้อมจับ Phishing",
+why:"พนักงานคือด่านแรกและด่านสุดท้าย คนที่รู้ทันช่วยกันภัยได้ดีกว่าเครื่องมือราคาแพง",
+items:[
+["จัดอบรมสั้น 30 นาที เรื่องฟิชชิ่งและกลโกงที่เจอบ่อย","ใช้เคสสรรพากรปลอมจากสไลด์เป็นตัวอย่าง"],
+["สอนเช็ก 3 จุด: ชื่อผู้ส่ง โดเมน และปลายทางลิงก์","เลื่อนเมาส์ไปชี้ลิงก์เพื่อดูที่อยู่จริงก่อนคลิก"],
+["ตั้งกฎ: เปลี่ยนเลขบัญชีจ่ายเงิน ต้องโทรยืนยันกลับ","กันกลโกงปลอมอีเมลเจ้านายหรือซัพพลายเออร์"],
+["กำหนดช่องทางรายงานอีเมลน่าสงสัย","เช่น กลุ่ม LINE หรืออีเมลกลาง ไม่ต้องกลัวถูกตำหนิ"],
+["ซ้อมส่งอีเมลหลอกภายในทีม แล้วอธิบายผล","เน้นเรียนรู้ ไม่ใช่จับผิด"],
+["เขียนแผนรับมือเหตุการณ์ 1 หน้า","ใครโทรหาใคร ตัดการเชื่อมต่อยังไง แจ้งธนาคารและตำรวจเมื่อไร"],
+["นัดทบทวน Checklist นี้ทุก 3 เดือน","ภัยเปลี่ยนตลอด ความปลอดภัยเป็นนิสัย ไม่ใช่งานครั้งเดียว"]]}
+];
+const K="cyh30";let S={done:{},start:null,theme:null};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const $=s=>root.querySelector(s);
+const total=PH.reduce((a,p)=>a+p.items.length,0);
+
+if(S.theme)host.dataset.theme=S.theme;
+$("#th").onclick=()=>{const dark=(host.dataset.theme||(matchMedia("(prefers-color-scheme:light)").matches?"light":"dark"))==="dark";S.theme=dark?"light":"dark";host.dataset.theme=S.theme;save()};
+
+$("#tl").innerHTML=PH.map(p=>`<a href="#${p.id}" style="--c:${p.c}"><i><span id="tb-${p.id}"></span></i>${p.d.replace("วันที่ ","")}</a>`).join("");
+$("#app").innerHTML=PH.map((p,pi)=>`
+<details class="ph" id="${p.id}" style="--c:${p.c}" ${pi==0?"open":""}>
+<summary><div class="ico">${p.ic}</div><div class="h"><div class="d">${p.d}</div><div class="t">${p.t}</div></div><div class="cnt" id="c-${p.id}"></div><span class="chev">▾</span></summary>
+<div class="why">${p.why}</div>
+<div class="list">${p.items.map((it,i)=>`<div class="item" tabindex="0" role="checkbox" aria-checked="false" data-k="${p.id}-${i}" data-p="${p.id}">
+<div class="box"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg></div>
+<div class="tx"><div class="n">${it[0]}</div><div class="tip">${it[1]}</div></div></div>`).join("")}</div></details>`).join("");
+
+let lastPct=0,shown={};
+function render(first){
+  let n=0;
+  PH.forEach(p=>{
+    let c=0;
+    p.items.forEach((_,i)=>{const k=p.id+"-"+i,el=root.querySelector(`[data-k="${k}"]`),on=!!S.done[k];
+      el.classList.toggle("ck",on);el.setAttribute("aria-checked",on);if(on)c++});
+    n+=c;
+    $("#c-"+p.id).textContent=c+"/"+p.items.length;
+    $("#tb-"+p.id).style.width=(c/p.items.length*100)+"%";
+    const full=c===p.items.length;
+    $("#"+p.id).classList.toggle("done",full);
+    if(full&&!shown[p.id]&&!first){toast("🎉 จบช่วง "+p.d+" แล้ว!");burst(innerWidth/2,innerHeight/3)}
+    shown[p.id]=full;
+  });
+  const pct=Math.round(n/total*100);
+  $("#fg").style.strokeDashoffset=352*(1-pct/100);
+  count($("#pv"),lastPct,pct);lastPct=pct;
+  $("#pc").textContent=n+" / "+total+" ข้อ";
+  const L=pct==100?["ยอดเยี่ยม! ธุรกิจของคุณแข็งแรงขึ้นมาก","คุณทำครบทุกข้อแล้ว อย่าลืมทบทวนทุก 3 เดือน","#34d39955"]:
+          pct>=60?["เกือบถึงแล้ว","ต่อยอดอีกนิดก็ครบ","#fbbf2455"]:
+          pct>=25?["กำลังไปได้ดี","ทำต่อเนื่องทีละข้อ","#22d3ee44"]:
+          ["เริ่มต้นกันเลย","เริ่มจากข้อแรกของช่วงที่ 1 ใช้เวลาไม่นาน","#22d3ee33"];
+  $("#lv").textContent=L[0];$("#mg").textContent=L[1];$("#hero").style.setProperty("--glow",L[2]);
+  if(pct==100&&!first&&!shown.all){burst(innerWidth/2,innerHeight/2,160);toast("🏆 ครบ 100% แล้ว ยินดีด้วย!")}
+  shown.all=pct==100;
+  day();
+}
+function count(el,a,b){const t0=performance.now();(function f(t){const r=Math.min(1,(t-t0)/700);el.textContent=Math.round(a+(b-a)*(1-Math.pow(1-r,3)));if(r<1)requestAnimationFrame(f)})(t0)}
+function day(){
+  const s=S.start?new Date(S.start):null;
+  let d=s?Math.floor((new Date().setHours(0,0,0,0)-new Date(s).setHours(0,0,0,0))/864e5)+1:1;
+  d=Math.max(1,Math.min(30,d));$("#dn").textContent=d;
+  const p=d<=7?0:d<=14?1:d<=21?2:3;$("#cur").textContent=PH[p].d.replace("วันที่ ","");
+  root.querySelectorAll(".tl a").forEach((a,i)=>a.classList.toggle("on",i==p));
+  $("#st").textContent=S.start?"เริ่มเมื่อ "+new Date(S.start).toLocaleDateString("th-TH",{day:"numeric",month:"short"}):"ตั้งวันเริ่มเป็นวันนี้";
+}
+$("#st").onclick=()=>{S.start=new Date().toISOString();save();day();toast("📅 เริ่มนับวันที่ 1 แล้ว")};
+
+function toggle(el,ev){
+  const k=el.dataset.k;
+  if(S.done[k])delete S.done[k];else{S.done[k]=1;
+    const r=el.getBoundingClientRect(),x=ev?ev.clientX-r.left:30,y=ev?ev.clientY-r.top:20,s=document.createElement("span");
+    s.className="rip";s.style.cssText=`left:${x-60}px;top:${y-60}px;width:120px;height:120px;--c:${getComputedStyle(el.closest(".ph")).getPropertyValue("--c")}`;
+    el.appendChild(s);setTimeout(()=>s.remove(),650)}
+  if(!S.start){S.start=new Date().toISOString()}
+  save();render();
+}
+$("#app").addEventListener("click",e=>{const it=e.target.closest(".item");if(it)toggle(it,e)});
+$("#app").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){const it=e.target.closest(".item");if(it){e.preventDefault();toggle(it)}}});
+$("#rs").onclick=()=>{if(confirm("ล้างความคืบหน้าทั้งหมด?")){S.done={};S.start=null;shown={};save();lastPct=0;render(true)}};
+
+let tt;function toast(m){const t=$("#ts");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2600)}
+
+const cv=$("#cv"),cx=cv.getContext("2d");let P=[],raf;
+function fit(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}fit();addEventListener("resize",fit);
+function burst(x,y,n=90){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const cols=["#22d3ee","#34d399","#fbbf24","#a78bfa","#f472b6"],d=devicePixelRatio;
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=(4+Math.random()*9)*d;
+    P.push({x:x*d,y:y*d,vx:Math.cos(a)*v,vy:Math.sin(a)*v-5*d,s:(4+Math.random()*5)*d,r:Math.random()*6,vr:Math.random()*.4-.2,c:cols[i%5],l:1})}
+  if(!raf)loop();
+}
+function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  P=P.filter(p=>p.l>0);
+  P.forEach(p=>{p.vy+=.28*devicePixelRatio;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l-=.011;
+    cx.save();cx.globalAlpha=Math.max(p.l,0);cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);cx.restore()});
+  raf=P.length?requestAnimationFrame(loop):null;
+}
+render(true);
+
+root.querySelectorAll('.tl a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=root.querySelector(a.getAttribute('href'));t&&t.scrollIntoView({behavior:'smooth',block:'start'})}))}
+const ov=$('#ov'),TERM=['> init case_00 --hook','> open case_01 : phishing.eml','> analyze --sender --link','> myth_check --sme','> apply cyber_hygiene --4','> plan --30days --qr','> exit 0 // stay safe'];let cl=0;
+$('#qimg2').src=$('#qimg').src;
+function openCL(){if(!cl){cl=1;const h=$('#clhost'),r=h.attachShadow({mode:'open'});h.dataset.theme='dark';r.append($('#cltpl').content.cloneNode(true));try{mountCL(r,h)}catch(e){console.error(e)}}ov.classList.add('on');ov.setAttribute('aria-hidden','false');glitch();SFX.scan();scr($('#acc'))}
+function closeCL(){ov.classList.remove('on');ov.setAttribute('aria-hidden','true');glitch();SFX.tick()}
+function glitch(){stg.classList.add('gl');for(let i=0;i<5;i++){const b=document.createElement('i');b.className='gb';b.style.cssText=`top:${Math.random()*100}%;height:${4+Math.random()*30}px;background:${i%2?'rgba(34,211,238,.35)':'rgba(255,0,200,.3)'};animation-delay:${i*40}ms`;stg.append(b);setTimeout(()=>b.remove(),500)}setTimeout(()=>stg.classList.remove('gl'),430)}
+function scr(el){if(!el||el.children.length)return;const t=el.dataset.t||(el.dataset.t=el.textContent),C='01#$%&@<>/|{}';let n=0;clearInterval(el._i);el._i=setInterval(()=>{n++;el.textContent=[...t].map((c,k)=>c==' '||k<n*t.length/14?c:C[Math.random()*C.length|0]).join('');if(n>=14){clearInterval(el._i);el.textContent=t}},45)}
+function term(i){const t=TERM[i],e=$('#term');let n=0;clearInterval(term._i);term._i=setInterval(()=>{e.textContent=t.slice(0,++n);if(n>=t.length)clearInterval(term._i)},35)}
+const gm=$('#gm'),gmc=$('#gmc'),gmp=$('#gmp'),cards=$$('.card'),cg=$('.cards');let GT=[],GI=[];
+SFX.type=()=>tone(1000,600,.03,'square',.04);SFX.up=()=>tone(400,900,.15,'triangle',.08);
+const tm=(f,ms)=>GT.push(setTimeout(f,ms)),gj2=()=>{gmp.classList.add('gl2');setTimeout(()=>gmp.classList.remove('gl2'),430)};
+const CI=[{i:'อีเมลปลอมชอบเร่งให้รีบ ดูโดเมนผู้ส่งและเลื่อนเมาส์ชี้ลิงก์ก่อนคลิกทุกครั้ง',b:'👆 กดฉันสิ',a:1},{i:'แพตช์ส่วนใหญ่ปิดช่องโหว่ที่แฮกเกอร์รู้แล้ว เปิดอัปเดตอัตโนมัติลดความเสี่ยงได้มาก',b:'⬆️ อัปเดตระบบ',a:1},{i:'รหัสยาว 12+ ตัว ไม่ซ้ำกันทุกบัญชี และเปิด MFA ต่อให้รหัสรั่วก็ยังเข้าไม่ได้',b:'🔑 ยืนยันรหัสผ่าน',a:0},{i:'กฎ 3-2-1: ข้อมูล 3 ชุด 2 สื่อ 1 ชุดเก็บนอกที่/คลาวด์ กันเรียกค่าไถ่ข้อมูล',b:'☁️ สำรองข้อมูล',a:1}];
+function foc(c){cards.forEach(x=>x.classList.remove('f','c'));c.classList.add('f');cg.classList.add('hv');slides[4].classList.add('hv');SFX.tick()}
+function unfoc(){cards.forEach(x=>x.classList.remove('f','c'));cg.classList.remove('hv');slides[4].classList.remove('hv')}
+cards.forEach((c,k)=>{const m=document.createElement('div');m.className='more';m.innerHTML='<div class="hnt">ชี้เพื่อดูเพิ่ม ✨</div><div class="inf">'+CI[k].i+'</div>';const g=document.createElement('button');g.className='btn go2';g.textContent=CI[k].b;m.append(g);c.append(m);
+ g.onclick=e=>{e.stopPropagation();SFX.tick();openGM(k)};
+ c.addEventListener('pointerenter',e=>{if(e.pointerType=='mouse')foc(c)});
+ c.addEventListener('pointerleave',e=>{if(e.pointerType=='mouse')unfoc()});
+ c.addEventListener('click',()=>{if(!c.classList.contains('f')){foc(c);return}if(c.classList.contains('c'))return;SFX.tick();if(CI[k].a)c.classList.add('c');else openGM(k)})});
+slides[4].addEventListener('click',e=>{if(!e.target.closest('.card'))unfoc()});
+function clearGM(){GT.forEach(clearTimeout);GI.forEach(clearInterval);GT=[];GI=[]}
+function openGM(k){clearGM();$('#gmt').textContent='root@sme:~$ ./lesson_0'+(k+1)+'.sh';gmc.innerHTML='';gm.classList.add('on');glitch();[G0,G1,G2,G3][k]()}
+function closeGM(){clearGM();gm.classList.remove('on');cards.forEach(x=>x.classList.remove('c'));SFX.tick()}
+function G0(){const M=['⚠️ SYSTEM COMPROMISED','💀 ไฟล์ของคุณถูกเข้ารหัสแล้ว','📡 กำลังส่งรหัสผ่าน → 203.0.113.9','🚨 VIRUS DETECTED x37','🔓 บัญชีธนาคารถูกเข้าถึง','☠️ PAY 0.5 BTC TO RECOVER'];
+ gmc.innerHTML='<div class="bait">🎁 คุณได้รับรางวัลใหญ่!<span>คลิกเพื่อรับ ▸</span></div>';
+ M.forEach((m,i)=>tm(()=>{const p=document.createElement('div');p.className='pop';p.style.cssText='left:'+(5+Math.random()*40)+'%;top:'+(5+Math.random()*62)+'%;--r:'+(Math.random()*8-4)+'deg';p.innerHTML='<b>'+m+'</b><small>ERR_0x'+(Math.random()*65535|0).toString(16)+'</small>';gmc.append(p);SFX.alarm();glitch();gj2()},500+i*550));
+ const t=500+M.length*550+400;
+ tm(()=>{gmc.innerHTML='<div class="big">คิดก่อนคลิกสิ!</div><div class="sub">แค่คลิกเดียว ก็เปลี่ยนชีวิตธุรกิจคุณได้</div>';SFX.slam();glitch();gj2()},t);tm(closeGM,t+2800)}
+function G1(){gmc.innerHTML='<div class="win"><div class="wr"></div><b>กำลังอัปเดต Windows</b><div class="pbar"><u id="pf"></u></div><small id="wp">0%</small><small>อย่าปิดเครื่อง</small></div>';let p=0;SFX.up();const id=setInterval(()=>{p=Math.min(100,p+1+Math.random()*3);$('#pf').style.width=p+'%';$('#wp').textContent=Math.round(p)+'%';if(Math.random()<.3)SFX.type();if(p>=100){clearInterval(id);$('.win').innerHTML='<div class="ok">✅ อัปเดตสำเร็จ</div><div>ปิดช่องโหว่แล้ว 12 รายการ 🛡️</div>';SFX.chime();glitch();gj2();tm(closeGM,2600)}},70);GI.push(id)}
+function G2(){const W='Gr33n!Leaf#2026$Bkk';gmc.innerHTML='<div style="font-size:40px">🔐</div><b>เข้าสู่ระบบ</b><div class="fld">accounts@greenleaf-organics.co.th</div><div class="fld" id="pw"></div><div class="pbar" style="width:min(100%,360px)"><u id="sf"></u></div><small id="sl">ความแข็งแรง: –</small><button class="btn" id="cf" style="opacity:0;pointer-events:none">✅ ยืนยันรหัสผ่าน</button>';let n=0;
+ const id=setInterval(()=>{n++;$('#pw').textContent='●'.repeat(n);SFX.type();const r=n/W.length,u=$('#sf');u.style.width=r*100+'%';u.style.background=r<.35?'var(--rd)':r<.7?'var(--am)':'var(--gr)';$('#sl').textContent='ความแข็งแรง: '+(r<.35?'อ่อน':r<.7?'ปานกลาง':r<1?'แข็งแรง':'แข็งแรงมาก 💪');
+ if(n>=W.length){clearInterval(id);const b=$('#cf');b.style.opacity=1;b.style.pointerEvents='auto';b.onclick=()=>{b.disabled=true;b.textContent='⏳ กำลังตรวจสอบ…';SFX.tick();tm(()=>{gmc.innerHTML='<div style="font-size:40px">📱</div><b>ใส่รหัสยืนยัน 2 ชั้น (MFA)</b><div class="otp">'+'<b></b>'.repeat(6)+'</div>';[...gmc.querySelectorAll('.otp b')].forEach((e,i)=>tm(()=>{e.textContent=Math.random()*10|0;SFX.type()},300+i*260));tm(()=>{gmc.innerHTML='<div class="ok">✅ Successful</div><div>เข้าสู่ระบบอย่างปลอดภัย</div>';SFX.chime();glitch();gj2();tm(closeGM,2600)},2400)},900)}}},120);GI.push(id)}
+function G3(){gmc.innerHTML='<div class="bk"><div>🖥️<small>เครื่องของคุณ</small></div><div class="lane" id="ln"></div><div class="cld" id="cld">☁️<small>Cloud</small></div></div><div class="pbar" style="width:80%"><u id="bf"></u></div><b id="bt">กำลังอัปโหลด 0%</b>';const ln=$('#ln'),F=['📄','📊','🧾','🖼️','📁'];ln.style.setProperty('--w',ln.offsetWidth+'px');let p=0;SFX.up();
+ const id=setInterval(()=>{p+=2;const s=document.createElement('i');s.className='fl';s.style.fontStyle='normal';s.textContent=F[Math.random()*5|0];s.style.top=(10+Math.random()*34)+'px';ln.append(s);setTimeout(()=>s.remove(),1100);$('#bf').style.width=p+'%';$('#bt').textContent='กำลังอัปโหลด '+p+'%';SFX.type();if(p>=100){clearInterval(id);$('#cld').classList.add('done');$('#bt').innerHTML='<span class="ok" style="font-size:28px">✅ สำรองข้อมูลสำเร็จ</span>';SFX.chime();glitch();gj2();tm(closeGM,2600)}},90);GI.push(id)}
+const EM=['🎉','🥳','🛡️','🔒','💪','👏','🚀','✨','😎','🔥','💯','🙌','🤖','🎊','🍀','❤️','⭐','🏆'];
+stg.addEventListener('pointerdown',e=>{if(cur!=6||e.target.closest('button'))return;for(let k=0,n=1+(Math.random()*2|0);k<n;k++){const s=document.createElement('i');s.className='em';s.textContent=EM[Math.random()*EM.length|0];s.style.cssText='left:'+(e.clientX-20)+'px;top:'+(e.clientY-20)+'px;--s:'+(28+Math.random()*34)+'px;--dx:'+(Math.random()*160-80)+'px;--r:'+(Math.random()*80-40)+'deg';document.body.append(s);setTimeout(()=>s.remove(),1700)}SFX.chime1()});
+show(0,0);
+</script>
+</body>
+</html>
